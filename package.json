@@ -1,0 +1,100 @@
+{
+  "name": "eslint-plugin-purist",
+  "version": "0.1.0",
+  "description": "ESLint plugin that encodes a strict React/TypeScript style guide with safe autofixes",
+  "type": "module",
+  "packageManager": "pnpm@10.12.1",
+  "license": "MIT",
+  "author": "Loic Nowakowski",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loicnowakowski/eslint-plugin-purist.git"
+  },
+  "bugs": {
+    "url": "https://github.com/loicnowakowski/eslint-plugin-purist/issues"
+  },
+  "homepage": "https://github.com/loicnowakowski/eslint-plugin-purist#readme",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "react",
+    "typescript",
+    "style-guide",
+    "a11y",
+    "tailwind"
+  ],
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "docs"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.0.0 || >=24.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "update:eslint-docs": "pnpm build && eslint-doc-generator",
+    "lint:eslint-docs": "eslint-doc-generator --check",
+    "prepare": "pnpm exec husky",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@typescript-eslint/utils": "8.30.0"
+  },
+  "peerDependencies": {
+    "@typescript-eslint/parser": ">=8",
+    "eslint": ">=9",
+    "typescript": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": false
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@types/node": "^22.15.32",
+    "@typescript-eslint/parser": "8.30.0",
+    "@typescript-eslint/rule-tester": "8.30.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9.30.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-doc-generator": "^2.2.0",
+    "husky": "^9.1.7",
+    "jiti": "^2.4.2",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "~5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "lint-staged": {
+    "*.{ts,js,mjs,cjs,json,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
