@@ -67,22 +67,28 @@ export const noInlineStyles = createRule<Options, MessageIds>({
 
         const value = node.value
 
-        if (!value || value.type !== 'JSXExpressionContainer') {
+        if (!value) {
+          context.report({
+            node,
+            messageId: 'noInlineStyles',
+          })
           return
         }
 
-        const expression = value.expression
+        if (value.type === 'JSXExpressionContainer') {
+          const expression = value.expression
 
-        if (expression.type === 'JSXEmptyExpression') {
-          return
-        }
+          if (expression.type === 'JSXEmptyExpression') {
+            return
+          }
 
-        if (
-          mergedOptions.allowCssVariables &&
-          expression.type === 'ObjectExpression' &&
-          objectExpressionOnlyHasCssVariables(expression)
-        ) {
-          return
+          if (
+            mergedOptions.allowCssVariables &&
+            expression.type === 'ObjectExpression' &&
+            objectExpressionOnlyHasCssVariables(expression)
+          ) {
+            return
+          }
         }
 
         context.report({

@@ -79,5 +79,20 @@ ruleTester.run('prefer-arrow-const', preferArrowConst, {
       errors: [{ messageId: 'preferArrowConst' }],
       output: 'const single = x => {}',
     },
+    {
+      code: 'function single(x: string) {}',
+      errors: [{ messageId: 'preferArrowConst' }],
+      output: 'const single = (x: string) => {}',
+    },
+    {
+      code: 'function withDefault(x = 1) {}',
+      errors: [{ messageId: 'preferArrowConst' }],
+      output: 'const withDefault = (x = 1) => {}',
+    },
+    {
+      code: 'function destructured({ a }: Props) {}',
+      errors: [{ messageId: 'preferArrowConst' }],
+      output: 'const destructured = ({ a }: Props) => {}',
+    },
   ],
 })

@@ -14,6 +14,9 @@ ruleTester.run('prefer-guard-clause', preferGuardClause, {
     'const foo = () => { if (ready) doWork() }',
     'const foo = () => ready && work()',
     'function empty() {}',
+    'const foo = () => { if (ready) { let x = 1; a(); b(); c() } }',
+    'const foo = () => { if (ready) { const x = 1; a(); b(); c() } }',
+    'const foo = () => { if (ready) { class Inner {} a(); b(); c() } }',
   ],
   invalid: [
     {

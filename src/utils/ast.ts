@@ -1,5 +1,7 @@
 import type { TSESLint, TSESTree } from '@typescript-eslint/utils'
 
+export const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
 const visitNode = (node: TSESTree.Node, visitor: (node: TSESTree.Node) => boolean): boolean => {
   if (visitor(node)) {
     return true
@@ -48,7 +50,7 @@ export const isFunctionUsedBeforeDeclaration = (
 
   const { name } = node.id
   const textBeforeDeclaration = sourceCode.getText().slice(0, node.range[0])
-  const namePattern = new RegExp(`\\b${name}\\b`)
+  const namePattern = new RegExp(`\\b${escapeRegExp(name)}\\b`)
 
   return namePattern.test(textBeforeDeclaration)
 }

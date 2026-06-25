@@ -8,13 +8,23 @@ ruleTester.run('no-inline-styles', noInlineStyles, {
       code: '<div style={{ "--x": 1 }} />',
       options: [{ allowCssVariables: true }],
     },
-    '<div style="color: red" />',
-    '<div style />',
     '<div style={} />',
   ],
   invalid: [
     {
       code: '<div style={{ color: "red" }} />',
+      errors: [{ messageId: 'noInlineStyles' }],
+    },
+    {
+      code: '<div style="color: red" />',
+      errors: [{ messageId: 'noInlineStyles' }],
+    },
+    {
+      code: '<div style />',
+      errors: [{ messageId: 'noInlineStyles' }],
+    },
+    {
+      code: '<div style={styles} />',
       errors: [{ messageId: 'noInlineStyles' }],
     },
     {

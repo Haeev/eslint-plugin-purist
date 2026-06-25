@@ -21,17 +21,28 @@ const defaultOptions: Options[0] = {
   ignoreJsxComponents: false,
 }
 
+const isBareIdentifierParam = (param: TSESTree.Parameter): param is TSESTree.Identifier => {
+  return param.type === 'Identifier' && !param.typeAnnotation
+}
+
+const formatParams = (params: TSESTree.Parameter[], sourceCode: TSESLint.SourceCode): string => {
+  if (params.length === 0) {
+    return '()'
+  }
+
+  if (params.length === 1 && isBareIdentifierParam(params[0]!)) {
+    return sourceCode.getText(params[0]!)
+  }
+
+  return `(${params.map((param) => sourceCode.getText(param)).join(', ')})`
+}
+
 const buildArrowFunction = (
   node: TSESTree.FunctionDeclaration,
   sourceCode: TSESLint.SourceCode,
 ): string => {
   const asyncPrefix = node.async ? 'async ' : ''
-  const params =
-    node.params.length === 0
-      ? '()'
-      : node.params.length === 1 && node.params[0]!.type !== 'RestElement'
-        ? sourceCode.getText(node.params[0]!)
-        : `(${node.params.map((param) => sourceCode.getText(param)).join(', ')})`
+  const params = formatParams(node.params, sourceCode)
   const body = sourceCode.getText(node.body)
   const name = node.id!.name
 

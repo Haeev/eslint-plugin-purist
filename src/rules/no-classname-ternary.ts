@@ -53,7 +53,7 @@ export const noClassnameTernary = createRule<Options, MessageIds>({
 
                 return fixer.replaceText(
                   expression,
-                  `cn(${whenTrue}, ${test} && ${whenTrue}, !${test} && ${whenFalse})`,
+                  `cn(${test} && ${whenTrue}, !(${test}) && ${whenFalse})`,
                 )
               },
             },

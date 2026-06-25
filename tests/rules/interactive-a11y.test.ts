@@ -9,9 +9,11 @@ ruleTester.run('interactive-a11y', interactiveA11y, {
     '<a href="/home" onClick={handleClick}>Home</a>',
     '<span onClick={handleClick} onKeyUp={handleKeyUp} tabIndex={0} role="button" title="Open" />',
     '<input onClick={handleClick} />',
-    '<Custom.Button onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0} role="button" aria-label="Save" />',
+    '<Button onClick={handleClick} />',
+    '<Custom.Button onClick={handleClick} />',
+    '<Custom.Panel onClick={handleClick} />',
+    '<x:div onClick={handleClick} />',
     '<div xml:lang="fr" onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0} role="button" aria-label="Open" />',
-    '<Custom.Panel onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0} role="button" aria-label="Open" />',
   ],
   invalid: [
     {
@@ -24,6 +26,23 @@ ruleTester.run('interactive-a11y', interactiveA11y, {
             {
               messageId: 'missingTabIndex',
               output: '<div onClick={handleClick} tabIndex={0} />',
+            },
+          ],
+        },
+        { messageId: 'missingRole' },
+        { messageId: 'missingAccessibleName' },
+      ],
+    },
+    {
+      code: '<a onClick={handleClick}>Open</a>',
+      errors: [
+        { messageId: 'missingKeyboardHandler' },
+        {
+          messageId: 'missingTabIndex',
+          suggestions: [
+            {
+              messageId: 'missingTabIndex',
+              output: '<a onClick={handleClick} tabIndex={0}>Open</a>',
             },
           ],
         },

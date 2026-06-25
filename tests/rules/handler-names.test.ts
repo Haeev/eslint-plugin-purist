@@ -22,36 +22,16 @@ ruleTester.run('handler-names', handlerNames, {
   invalid: [
     {
       code: 'const click = () => {}; <button onClick={click} />',
-      errors: [
-        {
-          messageId: 'handlerPrefix',
-          suggestions: [
-            {
-              messageId: 'handlerPrefix',
-              output: 'const click = () => {}; <button onClick={handleClick} />',
-            },
-          ],
-        },
-      ],
+      errors: [{ messageId: 'handlerPrefix' }],
     },
     {
       code: '<button onClick={doThing} />',
-      errors: [
-        {
-          messageId: 'handlerPrefix',
-          suggestions: [
-            {
-              messageId: 'handlerPrefix',
-              output: '<button onClick={handleDoThing} />',
-            },
-          ],
-        },
-      ],
+      errors: [{ messageId: 'handlerPrefix' }],
     },
     {
       code: '<button onClick={() => doThing()} />',
       options: [{ checkInlineFunctions: true }],
-      errors: [{ messageId: 'handlerPrefix' }],
+      errors: [{ messageId: 'inlineHandlerPrefix' }],
     },
   ],
 })

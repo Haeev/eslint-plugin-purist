@@ -49,7 +49,7 @@ rules: {
 
 | Name                                                       | Description                                                                          | 🔧  | 💡  |
 | :--------------------------------------------------------- | :----------------------------------------------------------------------------------- | :-- | :-- |
-| [handler-names](docs/rules/handler-names.md)               | Require event handler references to use a handle prefix                              |     | 💡  |
+| [handler-names](docs/rules/handler-names.md)               | Require event handler references to use a handle prefix                              |     |     |
 | [interactive-a11y](docs/rules/interactive-a11y.md)         | Require keyboard support and accessible names on non-native interactive JSX elements |     | 💡  |
 | [no-classname-ternary](docs/rules/no-classname-ternary.md) | Disallow ternary expressions as direct className values                              |     | 💡  |
 | [no-inline-styles](docs/rules/no-inline-styles.md)         | Disallow inline style attributes in JSX                                              |     |     |

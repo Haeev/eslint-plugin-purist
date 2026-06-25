@@ -9,7 +9,6 @@ type MessageIds =
   | 'missingAccessibleName'
 
 const NATIVE_INTERACTIVE_ELEMENTS = new Set([
-  'a',
   'button',
   'input',
   'select',
@@ -38,9 +37,23 @@ const getElementName = (openingElement: TSESTree.JSXOpeningElement): string | nu
   return null
 }
 
-const isNativeInteractive = (elementName: string | null): boolean => {
-  if (!elementName) {
+const isCustomComponent = (openingElement: TSESTree.JSXOpeningElement): boolean => {
+  const name = openingElement.name
+
+  if (name.type === 'JSXMemberExpression') {
     return true
+  }
+
+  if (name.type === 'JSXIdentifier' && /^[A-Z]/.test(name.name)) {
+    return true
+  }
+
+  return false
+}
+
+const isNativeInteractive = (elementName: string, attributes: TSESTree.JSXAttribute[]): boolean => {
+  if (elementName === 'a') {
+    return hasAttribute(attributes, ['href'])
   }
 
   return NATIVE_INTERACTIVE_ELEMENTS.has(elementName)
@@ -81,17 +94,19 @@ export const interactiveA11y = createRule<Options, MessageIds>({
           return
         }
 
+        if (isCustomComponent(node)) {
+          return
+        }
+
         const elementName = getElementName(node)
 
-        if (isNativeInteractive(elementName)) {
+        if (!elementName || isNativeInteractive(elementName, attributes)) {
           return
         }
 
         const reports: Array<{
           messageId: MessageIds
-          suggest?: ReturnType<typeof context.report> extends never
-            ? never
-            : Parameters<typeof context.report>[0]['suggest']
+          suggest?: Parameters<typeof context.report>[0]['suggest']
         }> = []
 
         if (!hasAttribute(attributes, ['onKeyDown', 'onKeyUp'])) {

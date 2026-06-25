@@ -8,7 +8,7 @@ type Options = [
   },
 ]
 
-type MessageIds = 'handlerPrefix'
+type MessageIds = 'handlerPrefix' | 'inlineHandlerPrefix'
 
 const defaultOptions: Options[0] = {
   checkInlineFunctions: false,
@@ -34,7 +34,7 @@ export const handlerNames = createRule<Options, MessageIds>({
     docs: {
       description: 'Require event handler references to use a handle prefix',
     },
-    hasSuggestions: true,
+    hasSuggestions: false,
     schema: [
       {
         type: 'object',
@@ -50,6 +50,8 @@ export const handlerNames = createRule<Options, MessageIds>({
     ],
     messages: {
       handlerPrefix: "Event handler '{{name}}' should use a 'handle' prefix.",
+      inlineHandlerPrefix:
+        'Inline event handlers should be extracted to a handle-prefixed function.',
     },
   },
   defaultOptions: [defaultOptions],
@@ -85,8 +87,7 @@ export const handlerNames = createRule<Options, MessageIds>({
 
           context.report({
             node: expression,
-            messageId: 'handlerPrefix',
-            data: { name: 'inlineHandler' },
+            messageId: 'inlineHandlerPrefix',
           })
           return
         }
@@ -101,21 +102,10 @@ export const handlerNames = createRule<Options, MessageIds>({
           return
         }
 
-        const suggestedName = `handle${handlerName.charAt(0).toUpperCase()}${handlerName.slice(1)}`
-
         context.report({
           node: expression,
           messageId: 'handlerPrefix',
           data: { name: handlerName },
-          suggest: [
-            {
-              messageId: 'handlerPrefix',
-              data: { name: handlerName },
-              fix(fixer) {
-                return fixer.replaceText(expression, suggestedName)
-              },
-            },
-          ],
         })
       },
     }

@@ -8,9 +8,6 @@ export default defineConfig([
   },
   {
     files: ['src/**/*.ts'],
-    plugins: {
-      purist: plugin,
-    },
     extends: [plugin.configs.recommended, eslintConfigPrettier],
   },
 ])

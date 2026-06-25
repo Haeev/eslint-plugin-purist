@@ -19,7 +19,7 @@ ruleTester.run('no-classname-ternary', noClassnameTernary, {
           suggestions: [
             {
               messageId: 'noClassnameTernary',
-              output: '<div className={cn("on", active && "on", !active && "off")} />',
+              output: '<div className={cn(active && "on", !(active) && "off")} />',
             },
           ],
         },
@@ -33,8 +33,7 @@ ruleTester.run('no-classname-ternary', noClassnameTernary, {
           suggestions: [
             {
               messageId: 'noClassnameTernary',
-              output:
-                '<div className={cn(inner ? "a" : "b", outer && inner ? "a" : "b", !outer && "c")} />',
+              output: '<div className={cn(outer && inner ? "a" : "b", !(outer) && "c")} />',
             },
           ],
         },
@@ -48,7 +47,7 @@ ruleTester.run('no-classname-ternary', noClassnameTernary, {
           suggestions: [
             {
               messageId: 'noClassnameTernary',
-              output: '<div class={cn("yes", enabled && "yes", !enabled && "no")} />',
+              output: '<div class={cn(enabled && "yes", !(enabled) && "no")} />',
             },
           ],
         },

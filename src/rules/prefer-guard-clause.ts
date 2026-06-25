@@ -27,6 +27,20 @@ const getFunctionBody = (
   return null
 }
 
+const hasBlockScopedBindings = (block: TSESTree.BlockStatement): boolean => {
+  return block.body.some((statement) => {
+    if (statement.type === 'VariableDeclaration') {
+      return statement.kind === 'const' || statement.kind === 'let'
+    }
+
+    if (statement.type === 'FunctionDeclaration' || statement.type === 'ClassDeclaration') {
+      return true
+    }
+
+    return false
+  })
+}
+
 export const preferGuardClause = createRule<Options, MessageIds>({
   name: 'prefer-guard-clause',
   meta: {
@@ -70,6 +84,10 @@ export const preferGuardClause = createRule<Options, MessageIds>({
       }
 
       const consequentBlock = onlyStatement.consequent
+
+      if (hasBlockScopedBindings(consequentBlock)) {
+        return
+      }
 
       if (countStatements(consequentBlock) < minStatements) {
         return
