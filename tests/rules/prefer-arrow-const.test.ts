@@ -4,6 +4,7 @@ import { ruleTester } from '../setup.js'
 ruleTester.run('prefer-arrow-const', preferArrowConst, {
   valid: [
     'const foo = () => {}',
+    'export const PageLayout = ({ children }: { children: React.ReactNode }) => <main>{children}</main>',
     'export const foo = () => {}',
     {
       code: 'export function foo() {}',
@@ -57,8 +58,34 @@ ruleTester.run('prefer-arrow-const', preferArrowConst, {
       errors: [{ messageId: 'preferArrowConst' }],
     },
     {
+      code: 'function outer() { const inner = function() { return this }; return inner }',
+      errors: [{ messageId: 'preferArrowConst' }],
+      output: 'const outer = () => { const inner = function() { return this }; return inner }',
+    },
+    {
       code: 'function usesArgs() { return arguments[0] }',
       errors: [{ messageId: 'preferArrowConst' }],
+    },
+    {
+      code: 'function usesArgs(arguments) { return arguments[0] }',
+      errors: [{ messageId: 'preferArrowConst' }],
+      output: 'const usesArgs = arguments => { return arguments[0] }',
+    },
+    {
+      code: 'function outer() { const inner = function() { return arguments[0] }; return inner }',
+      errors: [{ messageId: 'preferArrowConst' }],
+      output:
+        'const outer = () => { const inner = function() { return arguments[0] }; return inner }',
+    },
+    {
+      code: '// foo\nfunction foo() {}',
+      errors: [{ messageId: 'preferArrowConst' }],
+      output: '// foo\nconst foo = () => {}',
+    },
+    {
+      code: 'const label = "foo"\nfunction foo() {}',
+      errors: [{ messageId: 'preferArrowConst' }],
+      output: 'const label = "foo"\nconst foo = () => {}',
     },
     {
       code: 'function typed(): void {}',

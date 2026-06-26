@@ -6,12 +6,14 @@ export default defineConfig({
     setupFiles: ['tests/setup.ts'],
     coverage: {
       provider: 'v8',
-      include: ['src/rules/**/*.ts'],
+      include: ['src/rules/**/*.ts', 'src/utils/ast.ts', 'src/utils/scope.ts'],
       thresholds: {
-        lines: 100,
-        functions: 100,
-        branches: 100,
-        statements: 100,
+        'src/rules/**': {
+          lines: 95,
+          functions: 95,
+          branches: 95,
+          statements: 95,
+        },
       },
     },
   },

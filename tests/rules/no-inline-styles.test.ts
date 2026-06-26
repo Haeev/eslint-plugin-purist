@@ -4,6 +4,7 @@ import { ruleTester } from '../setup.js'
 ruleTester.run('no-inline-styles', noInlineStyles, {
   valid: [
     '<div className="p-4" />',
+    'export const Badge = ({ tone }: { tone: "ok" | "warn" }) => <span className={`badge-${tone}`} />',
     {
       code: '<div style={{ "--x": 1 }} />',
       options: [{ allowCssVariables: true }],

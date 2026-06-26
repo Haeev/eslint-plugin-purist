@@ -1,6 +1,7 @@
 import type { TSESTree } from '@typescript-eslint/utils'
 import { createRule } from '../utils/createRule.js'
 import { countStatements } from '../utils/ast.js'
+import { getBlockInnerText, getGuardReturnIndent, getStatementIndent } from '../utils/scope.js'
 
 type Options = [
   {
@@ -102,13 +103,13 @@ export const preferGuardClause = createRule<Options, MessageIds>({
             fix(fixer) {
               const sourceCode = context.sourceCode
               const test = sourceCode.getText(onlyStatement.test)
-              const innerStatements = consequentBlock.body
-                .map((statement: TSESTree.Statement) => sourceCode.getText(statement))
-                .join('\n')
+              const innerStatements = getBlockInnerText(consequentBlock, sourceCode)
+              const baseIndent = getStatementIndent(onlyStatement, sourceCode)
+              const blockIndent = getGuardReturnIndent(onlyStatement, sourceCode)
 
               return fixer.replaceText(
                 onlyStatement,
-                `if (!(${test})) {\n  return\n}\n${innerStatements}`,
+                `if (!(${test})) {\n${blockIndent}return\n${baseIndent}}\n${innerStatements}`,
               )
             },
           },

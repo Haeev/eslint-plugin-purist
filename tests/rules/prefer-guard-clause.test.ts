@@ -27,7 +27,38 @@ ruleTester.run('prefer-guard-clause', preferGuardClause, {
           suggestions: [
             {
               messageId: 'preferGuardClause',
-              output: 'const foo = () => { if (!(ready)) {\n  return\n}\na();\nb();\nc() }',
+              output:
+                'const foo = () => { if (!(ready)) {\n                      return\n                    }\n a(); b(); c()  }',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'const foo = () => { if (ready) { a(); /* keep */ b(); c() } }',
+      errors: [
+        {
+          messageId: 'preferGuardClause',
+          suggestions: [
+            {
+              messageId: 'preferGuardClause',
+              output:
+                'const foo = () => { if (!(ready)) {\n                      return\n                    }\n a(); /* keep */ b(); c()  }',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'const foo = () => {\n    if (ready) {\n        a();\n        b();\n        c();\n    }\n}',
+      errors: [
+        {
+          messageId: 'preferGuardClause',
+          suggestions: [
+            {
+              messageId: 'preferGuardClause',
+              output:
+                'const foo = () => {\n    if (!(ready)) {\n        return\n    }\n\n        a();\n        b();\n        c();\n    \n}',
             },
           ],
         },
@@ -41,7 +72,8 @@ ruleTester.run('prefer-guard-clause', preferGuardClause, {
           suggestions: [
             {
               messageId: 'preferGuardClause',
-              output: 'function foo() { if (!(ready)) {\n  return\n}\na();\nb();\nc();\nd() }',
+              output:
+                'function foo() { if (!(ready)) {\n                   return\n                 }\n a(); b(); c(); d()  }',
             },
           ],
         },

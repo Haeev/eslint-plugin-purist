@@ -8,12 +8,12 @@
   "author": "Loic Nowakowski",
   "repository": {
     "type": "git",
-    "url": "https://github.com/loicnowakowski/eslint-plugin-purist.git"
+    "url": "https://github.com/Haeev/eslint-plugin-purist.git"
   },
   "bugs": {
-    "url": "https://github.com/loicnowakowski/eslint-plugin-purist/issues"
+    "url": "https://github.com/Haeev/eslint-plugin-purist/issues"
   },
-  "homepage": "https://github.com/loicnowakowski/eslint-plugin-purist#readme",
+  "homepage": "https://github.com/Haeev/eslint-plugin-purist#readme",
   "keywords": [
     "eslint",
     "eslintplugin",
@@ -24,7 +24,10 @@
     "a11y",
     "tailwind"
   ],
-  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "files": [
     "dist",
     "docs"

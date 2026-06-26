@@ -38,7 +38,7 @@ const objectExpressionOnlyHasCssVariables = (expression: TSESTree.ObjectExpressi
 export const noInlineStyles = createRule<Options, MessageIds>({
   name: 'no-inline-styles',
   meta: {
-    type: 'problem',
+    type: 'suggestion',
     docs: {
       description: 'Disallow inline style attributes in JSX',
     },

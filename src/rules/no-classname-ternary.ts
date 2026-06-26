@@ -1,8 +1,18 @@
 import type { TSESTree } from '@typescript-eslint/utils'
 import { createRule } from '../utils/createRule.js'
+import { findAvailableClassNameHelper } from '../utils/scope.js'
 
-type Options = []
+type Options = [
+  {
+    helper?: 'cn' | 'clsx'
+  },
+]
+
 type MessageIds = 'noClassnameTernary'
+
+const defaultOptions: Options[0] = {
+  helper: 'cn',
+}
 
 const isClassNameAttribute = (name: string): boolean => name === 'className' || name === 'class'
 
@@ -14,13 +24,27 @@ export const noClassnameTernary = createRule<Options, MessageIds>({
       description: 'Disallow ternary expressions as direct className values',
     },
     hasSuggestions: true,
-    schema: [],
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          helper: {
+            type: 'string',
+            enum: ['cn', 'clsx'],
+            description: 'Preferred className helper to target in suggestions.',
+          },
+        },
+        additionalProperties: false,
+      },
+    ],
     messages: {
       noClassnameTernary: 'Avoid ternary expressions in className. Use cn() or clsx() instead.',
     },
   },
-  defaultOptions: [],
-  create(context) {
+  defaultOptions: [defaultOptions],
+  create(context, [options]) {
+    const mergedOptions = { ...defaultOptions, ...options }
+
     return {
       JSXAttribute(node) {
         if (node.name.type !== 'JSXIdentifier' || !isClassNameAttribute(node.name.name)) {
@@ -39,25 +63,29 @@ export const noClassnameTernary = createRule<Options, MessageIds>({
           return
         }
 
+        const helperName = findAvailableClassNameHelper(context.sourceCode, mergedOptions.helper!)
+
         context.report({
           node: expression,
           messageId: 'noClassnameTernary',
-          suggest: [
-            {
-              messageId: 'noClassnameTernary',
-              fix(fixer) {
-                const sourceCode = context.sourceCode
-                const whenTrue = sourceCode.getText(expression.consequent)
-                const whenFalse = sourceCode.getText(expression.alternate)
-                const test = sourceCode.getText(expression.test)
+          suggest: helperName
+            ? [
+                {
+                  messageId: 'noClassnameTernary',
+                  fix(fixer) {
+                    const sourceCode = context.sourceCode
+                    const whenTrue = sourceCode.getText(expression.consequent)
+                    const whenFalse = sourceCode.getText(expression.alternate)
+                    const test = sourceCode.getText(expression.test)
 
-                return fixer.replaceText(
-                  expression,
-                  `cn(${test} && ${whenTrue}, !(${test}) && ${whenFalse})`,
-                )
-              },
-            },
-          ],
+                    return fixer.replaceText(
+                      expression,
+                      `${helperName}(${test} && ${whenTrue}, !(${test}) && ${whenFalse})`,
+                    )
+                  },
+                },
+              ]
+            : undefined,
         })
       },
     }

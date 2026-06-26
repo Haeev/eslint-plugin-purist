@@ -6,14 +6,14 @@ ruleTester.run('interactive-a11y', interactiveA11y, {
     '<div />',
     '<button onClick={handleClick}>Save</button>',
     '<div onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0} role="button" aria-label="Save" />',
+    '<div onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0}>Save</div>',
     '<a href="/home" onClick={handleClick}>Home</a>',
-    '<span onClick={handleClick} onKeyUp={handleKeyUp} tabIndex={0} role="button" title="Open" />',
     '<input onClick={handleClick} />',
     '<Button onClick={handleClick} />',
     '<Custom.Button onClick={handleClick} />',
     '<Custom.Panel onClick={handleClick} />',
     '<x:div onClick={handleClick} />',
-    '<div xml:lang="fr" onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0} role="button" aria-label="Open" />',
+    '<div xml:lang="fr" onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0} aria-label="Open" />',
   ],
   invalid: [
     {
@@ -29,7 +29,6 @@ ruleTester.run('interactive-a11y', interactiveA11y, {
             },
           ],
         },
-        { messageId: 'missingRole' },
         { messageId: 'missingAccessibleName' },
       ],
     },
@@ -46,8 +45,6 @@ ruleTester.run('interactive-a11y', interactiveA11y, {
             },
           ],
         },
-        { messageId: 'missingRole' },
-        { messageId: 'missingAccessibleName' },
       ],
     },
     {
@@ -64,6 +61,10 @@ ruleTester.run('interactive-a11y', interactiveA11y, {
           ],
         },
       ],
+    },
+    {
+      code: '<><div onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0} /></>',
+      errors: [{ messageId: 'missingAccessibleName' }],
     },
     {
       code: '<div onClick={handleClick} tabIndex={0} role="button" aria-label="Save" />',

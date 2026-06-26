@@ -88,7 +88,7 @@ export const preferArrowConst = createRule<Options, MessageIds>({
         return false
       }
 
-      if (functionBodyUsesThis(node) || functionBodyUsesArguments(node)) {
+      if (functionBodyUsesThis(node) || functionBodyUsesArguments(node, context.sourceCode)) {
         return false
       }
 

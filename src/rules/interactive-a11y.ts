@@ -2,11 +2,7 @@ import type { TSESTree } from '@typescript-eslint/utils'
 import { createRule } from '../utils/createRule.js'
 
 type Options = []
-type MessageIds =
-  | 'missingKeyboardHandler'
-  | 'missingTabIndex'
-  | 'missingRole'
-  | 'missingAccessibleName'
+type MessageIds = 'missingKeyboardHandler' | 'missingTabIndex' | 'missingAccessibleName'
 
 const NATIVE_INTERACTIVE_ELEMENTS = new Set([
   'button',
@@ -63,23 +59,46 @@ const hasAccessibleName = (attributes: TSESTree.JSXAttribute[]): boolean => {
   return hasAttribute(attributes, ['aria-label', 'aria-labelledby', 'title'])
 }
 
+const hasNonEmptyJsxTextChild = (element: TSESTree.JSXElement): boolean => {
+  return element.children.some((child) => {
+    if (child.type === 'JSXText') {
+      return child.value.trim().length > 0
+    }
+
+    if (child.type === 'JSXExpressionContainer' && child.expression.type === 'Literal') {
+      return typeof child.expression.value === 'string' && child.expression.value.trim().length > 0
+    }
+
+    return false
+  })
+}
+
+const getParentJsxElement = (node: TSESTree.JSXOpeningElement): TSESTree.JSXElement | null => {
+  const parent = node.parent
+
+  if (parent?.type === 'JSXElement') {
+    return parent
+  }
+
+  return null
+}
+
 export const interactiveA11y = createRule<Options, MessageIds>({
   name: 'interactive-a11y',
   meta: {
     type: 'suggestion',
     docs: {
       description:
-        'Require keyboard support and accessible names on non-native interactive JSX elements',
+        'Require keyboard support and accessible names on clickable non-native JSX elements',
     },
     hasSuggestions: true,
     schema: [],
     messages: {
       missingKeyboardHandler:
-        'Interactive elements must include onKeyDown or onKeyUp alongside onClick.',
-      missingTabIndex: 'Interactive elements must include tabIndex.',
-      missingRole: 'Interactive elements must include an explicit role.',
+        'Add onKeyDown or onKeyUp alongside onClick for non-native clickable elements.',
+      missingTabIndex: 'Add tabIndex to non-native clickable elements.',
       missingAccessibleName:
-        'Interactive elements must include aria-label, aria-labelledby, or title.',
+        'Add aria-label, aria-labelledby, title, or visible text content for clickable elements.',
     },
   },
   defaultOptions: [],
@@ -104,17 +123,20 @@ export const interactiveA11y = createRule<Options, MessageIds>({
           return
         }
 
-        const reports: Array<{
-          messageId: MessageIds
-          suggest?: Parameters<typeof context.report>[0]['suggest']
-        }> = []
+        const parentElement = getParentJsxElement(node)
+        const hasTextContent = parentElement ? hasNonEmptyJsxTextChild(parentElement) : false
+        const hasName = hasAccessibleName(attributes) || hasTextContent
 
         if (!hasAttribute(attributes, ['onKeyDown', 'onKeyUp'])) {
-          reports.push({ messageId: 'missingKeyboardHandler' })
+          context.report({
+            node,
+            messageId: 'missingKeyboardHandler',
+          })
         }
 
         if (!hasAttribute(attributes, ['tabIndex'])) {
-          reports.push({
+          context.report({
+            node,
             messageId: 'missingTabIndex',
             suggest: [
               {
@@ -129,19 +151,10 @@ export const interactiveA11y = createRule<Options, MessageIds>({
           })
         }
 
-        if (!hasAttribute(attributes, ['role'])) {
-          reports.push({ messageId: 'missingRole' })
-        }
-
-        if (!hasAccessibleName(attributes)) {
-          reports.push({ messageId: 'missingAccessibleName' })
-        }
-
-        for (const report of reports) {
+        if (!hasName) {
           context.report({
             node,
-            messageId: report.messageId,
-            suggest: report.suggest,
+            messageId: 'missingAccessibleName',
           })
         }
       },
