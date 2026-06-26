@@ -47,14 +47,14 @@ rules: {
 🔧 Automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/user-guide/command-line-interface#--fix).\
 💡 Manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).
 
-| Name                                                       | Description                                                                          | 🔧  | 💡  |
-| :--------------------------------------------------------- | :----------------------------------------------------------------------------------- | :-- | :-- |
-| [handler-names](docs/rules/handler-names.md)               | Require event handler references to use a handle prefix                              |     |     |
-| [interactive-a11y](docs/rules/interactive-a11y.md)         | Require keyboard support and accessible names on non-native interactive JSX elements |     | 💡  |
-| [no-classname-ternary](docs/rules/no-classname-ternary.md) | Disallow ternary expressions as direct className values                              |     | 💡  |
-| [no-inline-styles](docs/rules/no-inline-styles.md)         | Disallow inline style attributes in JSX                                              |     |     |
-| [prefer-arrow-const](docs/rules/prefer-arrow-const.md)     | Prefer const arrow functions over function declarations                              | 🔧  |     |
-| [prefer-guard-clause](docs/rules/prefer-guard-clause.md)   | Prefer early returns over wrapping function bodies in a single if block              |     | 💡  |
+| Name                                                       | Description                                                                          | 🔧 | 💡 |
+| :--------------------------------------------------------- | :----------------------------------------------------------------------------------- | :- | :- |
+| [handler-names](docs/rules/handler-names.md)               | Require event handler references to use a handle prefix                              |    |    |
+| [interactive-a11y](docs/rules/interactive-a11y.md)         | Require keyboard support and accessible names on non-native interactive JSX elements |    | 💡 |
+| [no-classname-ternary](docs/rules/no-classname-ternary.md) | Disallow ternary expressions as direct className values                              |    | 💡 |
+| [no-inline-styles](docs/rules/no-inline-styles.md)         | Disallow inline style attributes in JSX                                              |    |    |
+| [prefer-arrow-const](docs/rules/prefer-arrow-const.md)     | Prefer const arrow functions over function declarations                              | 🔧 |    |
+| [prefer-guard-clause](docs/rules/prefer-guard-clause.md)   | Prefer early returns over wrapping function bodies in a single if block              |    | 💡 |
 
 <!-- end auto-generated rules list -->
 
