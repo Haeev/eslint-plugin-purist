@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/Haeev/eslint-plugin-purist/compare/v1.0.0...v1.0.1) (2026-06-27)
+
+
+### Bug Fixes
+
+* **ci:** avoid secrets in workflow if conditions ([2075b67](https://github.com/Haeev/eslint-plugin-purist/commit/2075b671c03dedcb75ee33d6209792a13b3b6f45))
+* **ci:** ignore CHANGELOG.md in Prettier check ([2a85c74](https://github.com/Haeev/eslint-plugin-purist/commit/2a85c741af0e3c7ce2d74e9a130d591e713abd01))
+
 ## 1.0.0 (2026-06-26)
 
 
