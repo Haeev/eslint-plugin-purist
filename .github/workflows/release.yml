@@ -50,7 +50,15 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Skip npm publish without NPM_TOKEN
+        if: ${{ secrets.NPM_TOKEN == '' }}
+        run: |
+          echo "Release ${{ needs.release-please.outputs.tag_name }} was created."
+          echo "Skipping npm publish because NPM_TOKEN is not configured."
+          echo "Add NPM_TOKEN in repository secrets or publish manually."
+
       - name: Publish to npm with provenance
+        if: ${{ secrets.NPM_TOKEN != '' }}
         run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
